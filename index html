@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Micro-Certification Platform</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <header>
+    <h1>🎓 Micro-Certification Learning</h1>
+    <p>Learn skills quickly · Take quizzes · Earn certificates</p>
+  </header>
+
+  <main>
+    <!-- Lesson Section -->
+    <section id="lesson" class="card">
+      <h2>📘 Lesson: Introduction to JavaScript</h2>
+      <p>
+        JavaScript adds interactivity to web pages—changing content, validating forms,
+        and creating animations. It runs in the browser and works with HTML & CSS.
+      </p>
+      <button class="btn" id="startQuizBtn">Take Quiz</button>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="card hidden">
+      <h2>📝 Quiz</h2>
+      <form id="quizForm">
+        <div class="q">
+          <p>1) Which language is used to make websites interactive?</p>
+          <label><input type="radio" name="q1" value="HTML" required> HTML</label><br>
+          <label><input type="radio" name="q1" value="CSS"> CSS</label><br>
+          <label><input type="radio" name="q1" value="JavaScript"> JavaScript</label>
+        </div>
+
+        <div class="q">
+          <p>2) Which HTML tag is used to include JavaScript?</p>
+          <label><input type="radio" name="q2" value="<style>" required> &lt;style&gt;</label><br>
+          <label><input type="radio" name="q2" value="<script>"> &lt;script&gt;</label><br>
+          <label><input type="radio" name="q2" value="<js>"> &lt;js&gt;</label>
+        </div>
+
+        <button type="submit" class="btn">Submit Quiz</button>
+      </form>
+    </section>
+
+    <!-- Result / Certificate Section -->
+    <section id="result" class="card hidden">
+      <h2>📊 Result</h2>
+      <p id="score"></p>
+      <div id="certificate" class="certificate hidden">
+        <h3>🎉 Congratulations!</h3>
+        <p>
+          You earned a <strong>Micro-Certificate</strong> in
+          <em>JavaScript Basics</em>!
+        </p>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="retryBtn">Retry Quiz</button>
+        <button class="btn" id="backToLessonBtn">Back to Lesson</button>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="card">
+      <h2>📌 My Dashboard</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-num" id="lessonsCount">0</div>
+          <div class="stat-label">Lessons Completed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="certCount">0</div>
+          <div class="stat-label">Certificates Earned</div>
+        </div>
+      </div>
+      <p class="muted">Progress is saved in your browser (localStorage).</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Micro-Certification Platform · Phase 3 Implementation</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

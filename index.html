@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Micro-Certificate Demo — Generate Digital Certificate</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{--brand:#2468d2;--accent:#4a90e2;--muted:#666}
+    body{font-family:Inter, Arial, sans-serif; margin:0; background:#f4f8ff; color:#111}
+    header{background:var(--brand); color:#fff; padding:14px 18px; display:flex; justify-content:space-between; align-items:center}
+    .wrap{max-width:980px; margin:18px auto; padding:12px}
+    .card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 30px rgba(30,80,160,.06); margin-bottom:14px}
+    h1,h2{margin:0 0 8px 0}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    .video{width:100%; border-radius:8px; overflow:hidden}
+    .btn{padding:8px 12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;border:1px solid #d6e6ff;color:var(--accent)}
+    .quiz q{display:block;margin-bottom:10px}
+    .small{color:var(--muted);font-size:13px}
+    .center{ text-align:center }
+    /* certificate preview box */
+    #certPreview{width:100%;background:#fafafa;border:1px dashed #dfeeff;padding:10px;border-radius:8px;overflow:auto}
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Micro-Certification Platform (Demo)</h1>
+      <div class="small">Short lesson + quiz + digital certificate generation</div>
+    </div>
+    <div style="text-align:right">
+      <input id="nameInput" placeholder="Enter name for certificate" style="padding:8px;border-radius:8px;border:none" />
+    </div>
+  </header>
+
+  <div class="wrap">
+    <!-- Lesson + Video -->
+    <div class="card">
+      <h2>Lesson: Introduction to Excel Basics</h2>
+      <div class="video">
+        <video controls width="100%" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+      </div>
+      <p class="small">Watch the short clip then take the quiz below. Replace the video with your own file if needed.</p>
+    </div>
+
+    <!-- Quiz -->
+    <div class="card">
+      <h2>Quiz: Excel Basics (5 questions)</h2>
+      <div id="quizArea" class="quiz">
+        <div class="q">
+          <strong>1.</strong> Shortcut to copy?<br>
+          <label><input type="radio" name="q1" value="A"> Ctrl + C</label><br>
+          <label><input type="radio" name="q1" value="B"> Ctrl + V</label>
+        </div>
+        <div class="q">
+          <strong>2.</strong> Which symbol starts a formula?<br>
+          <label><input type="radio" name="q2" value="A"> #</label><br>
+          <label><input type="radio" name="q2" value="B"> =</label>
+        </div>
+        <div class="q">
+          <strong>3.</strong> Function to add numbers?<br>
+          <label><input type="radio" name="q3" value="A"> SUM()</label><br>
+          <label><input type="radio" name="q3" value="B"> ADD()</label>
+        </div>
+        <div class="q">
+          <strong>4.</strong> Default Excel extension?<br>
+          <label><input type="radio" name="q4" value="A"> .xlsx</label><br>
+          <label><input type="radio" name="q4" value="B"> .docx</label>
+        </div>
+        <div class="q">
+          <strong>5.</strong> Shortcut to paste?<br>
+          <label><input type="radio" name="q5" value="A"> Ctrl + V</label><br>
+          <label><input type="radio" name="q5" value="B"> Ctrl + X</label>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+        <button class="btn" onclick="gradeQuiz()">Submit & Grade</button>
+        <button class="btn ghost" onclick="resetQuiz()">Reset</button>
+        <div id="quizResult" style="margin-left:12px;color:var(--muted)"></div>
+      </div>
+
+    </div>
+
+    <!-- Dashboard + Certificate actions -->
+    <div class="row">
+      <div class="col card">
+        <h2>Dashboard</h2>
+        <p class="small">Track your progress here</p>
+        <p><strong>Score:</strong> <span id="scoreText">0 / 5</span></p>
+        <p><strong>Percent:</strong> <span id="percentText">0%</span></p>
+        <p><strong>Status:</strong> <span id="statusText">Not attempted</span></p>
+        <div style="margin-top:10px">
+          <button class="btn" onclick="generateCertificate()">Generate Certificate</button>
+          <button class="btn ghost" onclick="downloadCertificatePNG()" id="downloadBtn" style="display:none">Download PNG</button>
+          <button class="btn ghost" onclick="printCertificate()" id="printBtn" style="display:none">Print</button>
+        </div>
+      </div>
+
+      <div class="col card">
+        <h2 class="center">Certificate Preview</h2>
+        <div id="certPreview" class="center">
+          <canvas id="certCanvas" width="800" height="600" style="max-width:100%;border-radius:6px;background:white"></canvas>
+        </div>
+        <p class="small center" style="margin-top:8px">The certificate is rendered on canvas — click <b>Download PNG</b> to save it.</p>
+      </div>
+    </div>
+
+    <div class="card small">
+      Tip: After downloading PNG, you can attach it to emails or upload where needed. The certificate shows name, course, date, and score.
+    </div>
+  </div>
+
+<script>
+  // Answers: correct values
+  const answers = { q1:'A', q2:'B', q3:'A', q4:'A', q5:'A' };
+  let lastScore = 0;
+  let lastPercent = 0;
+
+  function gradeQuiz(){
+    let score = 0, total = 5;
+    for(let i=1;i<=total;i++){
+      const sel = document.querySelector('input[name="q'+i+'"]:checked');
+      if(sel && sel.value === answers['q'+i]) score++;
+    }
+    lastScore = score;
+    lastPercent = Math.round((score/total)*100);
+
+    document.getElementById('scoreText').innerText = score + ' / ' + total;
+    document.getElementById('percentText').innerText = lastPercent + '%';
+    document.getElementById('quizResult').innerText = (lastPercent >= 60) ? '✅ Passed' : '⚠️ Try Again';
+    document.getElementById('statusText').innerText = 'Quiz attempted';
+
+    // show download/print only after generateCertificate() is called
+  }
+
+  function resetQuiz(){
+    document.querySelectorAll('#quizArea input[type=radio]').forEach(r=> r.checked = false);
+    document.getElementById('scoreText').innerText = '0 / 5';
+    document.getElementById('percentText').innerText = '0%';
+    document.getElementById('quizResult').innerText = '';
+    document.getElementById('statusText').innerText = 'Not attempted';
+    lastScore = 0; lastPercent = 0;
+    hideCertButtons();
+    clearCanvas();
+  }
+
+  // Canvas certificate generation
+  const canvas = document.getElementById('certCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function clearCanvas(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // draw placeholder blank certificate
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle = '#e6eefc';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(20,20,canvas.width-40,canvas.height-40);
+    ctx.fillStyle = '#333';
+    ctx.font = '18px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Certificate preview will appear here', canvas.width/2, canvas.height/2);
+  }
+
+  // initial placeholder
+  clearCanvas();
+
+  function generateCertificate(){
+    // ensure quiz graded
+    if(lastScore === 0 && lastPercent === 0) {
+      if(!confirm('You have not taken/graded the quiz or score is 0. Generate certificate anyway?')) return;
+    }
+
+    const name = (document.getElementById('nameInput').value || 'Student Name').trim();
+    const course = 'Excel Basics (Micro-Course)';
+    const scoreText = `${lastScore} / 5 • ${lastPercent}%`;
+    const date = new Date().toLocaleDateString();
+
+    // high-DPI canvas scaling for crisp PNG
+    const DPR = window.devicePixelRatio || 1;
+    const w = 1200, h = 900; // high resolution
+    canvas.width = w * DPR; canvas.height = h * DPR;
+    canvas.style.width = '100%'; canvas.style.height = 'auto';
+    ctx.setTransform(DPR,0,0,DPR,0,0); // scale drawing commands
+
+    // background
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0,0,w,h);
+
+    // border decorative
+    ctx.strokeStyle = '#2e65c4';
+    ctx.lineWidth = 10;
+    roundRect(ctx,20,20,w-40,h-40,24);
+    ctx.stroke();
+
+    // header seal / ribbon
+    // draw top ribbon
+    ctx.fillStyle = '#2e65c4';
+    ctx.fillRect(0,0,w,70);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 28px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Micro-Certificate of Completion', w/2, 44);
+
+    // main text
+    ctx.fillStyle = '#222';
+    ctx.font = '700 40px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Certificate of Completion', w/2, 180);
+
+    ctx.font = '18px Arial';
+    ctx.fillStyle = '#333';
+    ctx.fillText('This certificate is proudly presented to', w/2, 230);
+
+    // Name
+    ctx.font = 'bold 46px Georgia';
+    ctx.fillStyle = '#111';
+    ctx.fillText(name, w/2, 300);
+
+    // course and score
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#333';
+    ctx.fillText(`For successfully completing the course: ${course}`, w/2, 360);
+    ctx.fillText(`Score: ${scoreText}`, w/2, 400);
+
+    // date & signature box
+    ctx.font = '18px Arial';
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Date: ${date}`, 80, h - 140);
+
+    // signature (simulated)
+    ctx.textAlign = 'right';
+    ctx.fillText('Instructor', w - 120, h - 140);
+    // draw signature line
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(w - 300, h - 120);
+    ctx.lineTo(w - 80, h - 120);
+    ctx.stroke();
+
+    // seal: circle on left
+    const sealX = 140, sealY = h - 300, sealR = 70;
+    ctx.beginPath();
+    ctx.fillStyle = '#ffd966';
+    ctx.arc(sealX, sealY, sealR, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = '#e6b800';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.fillStyle = '#111';
+    ctx.font = 'bold 14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Verified', sealX, sealY-4);
+    ctx.font = '12px Arial';
+    ctx.fillText('Micro-Cert', sealX, sealY+14);
+
+    // small footer
+    ctx.textAlign = 'center';
+    ctx.font = '12px Arial';
+    ctx.fillStyle = '#666';
+    ctx.fillText('This is a demo certificate generated locally by the Micro-Cert platform', w/2, h - 30);
+
+    // restore transform for further small canvas drawings if needed
+    ctx.setTransform(1,0,0,1,0,0);
+
+    // show download/print buttons
+    document.getElementById('downloadBtn').style.display = 'inline-block';
+    document.getElementById('printBtn').style.display = 'inline-block';
+  }
+
+  // helper: rounded rectangle stroke
+  function roundRect(ctx, x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y, x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x, y+h, r);
+    ctx.arcTo(x, y+h, x, y, r);
+    ctx.arcTo(x, y, x+w, y, r);
+    ctx.closePath();
+  }
+
+  // Download canvas as PNG
+  function downloadCertificatePNG(){
+    // ensure canvas has been generated
+    const link = document.createElement('a');
+    // Convert canvas to data URL with default (png)
+    // To get full-resolution PNG, temporarily set transform to DPR handled earlier
+    const dataURL = canvas.toDataURL('image/png');
+    link.href = dataURL;
+    const filenameName = (document.getElementById('nameInput').value || 'student').replace(/\s+/g,'_');
+    link.download = `certificate_${filenameName}.png`;
+    link.click();
+  }
+
+  // Print certificate (open new window with image)
+  function printCertificate(){
+    const dataURL = canvas.toDataURL('image/png');
+    const w = window.open('', '_blank');
+    w.document.write(`<html><head><title>Print Certificate</title></head><body style="margin:0"><img src="${dataURL}" style="width:100%;height:auto"/></body></html>`);
+    w.document.close();
+    w.focus();
+    w.print();
+  }
+</script>
+</body>
+</html>

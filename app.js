@@ -1,82 +1,59 @@
-// ---------- Storage helpers (Phase 3 condition: persist progress) ----------
-const STORAGE_KEY = 'microCertProgress';
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { lessonsCompleted: 0, certsEarned: 0 };
-  } catch {
-    return { lessonsCompleted: 0, certsEarned: 0 };
-  }
-}
-function saveProgress(p) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const lessonSection = document.getElementById('lesson');
+  const quizSection   = document.getElementById('quiz');
+  const resultSection = document.getElementById('result');
+  const startQuizBtn  = document.getElementById('startQuizBtn');
+  const quizForm      = document.getElementById('quizForm');
+  const scoreText     = document.getElementById('score');
+  const certDiv       = document.getElementById('certificate');
+  const retryBtn      = document.getElementById('retryBtn');
+  const backBtn       = document.getElementById('backToLessonBtn');
 
-// ---------- UI Elements ----------
-const lessonSection = document.getElementById('lesson');
-const quizSection   = document.getElementById('quiz');
-const resultSection = document.getElementById('result');
-const startQuizBtn  = document.getElementById('startQuizBtn');
-const quizForm      = document.getElementById('quizForm');
-const scoreText     = document.getElementById('score');
-const certDiv       = document.getElementById('certificate');
-const retryBtn      = document.getElementById('retryBtn');
-const backBtn       = document.getElementById('backToLessonBtn');
+  const TOTAL = 2;
 
-// ---------- Dashboard ----------
-let progress = loadProgress();
-updateDashboard();
+  // Start quiz
+  startQuizBtn.addEventListener('click', () => {
+    lessonSection.classList.add('hidden');
+    quizSection.classList.remove('hidden');
+  });
 
-// ---------- Navigation ----------
-startQuizBtn.addEventListener('click', () => {
-  lessonSection.classList.add('hidden');
-  resultSection.classList.add('hidden');
-  quizSection.classList.remove('hidden');
-});
+  // Submit quiz
+  quizForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-retryBtn.addEventListener('click', () => {
-  quizForm.reset();
-  certDiv.classList.add('hidden');
-  resultSection.classList.add('hidden');
-  quizSection.classList.remove('hidden');
-});
+    const q1 = (quizForm.q1.value || '').toLowerCase();
+    const q2 = (quizForm.q2.value || '').toLowerCase();
 
-backBtn.addEventListener('click', () => {
-  quizForm.reset();
-  certDiv.classList.add('hidden');
-  resultSection.classList.add('hidden');
-  lessonSection.classList.remove('hidden');
-});
+    let score = 0;
+    if (q1 === 'javascript') score++;
+    if (q2 === 'script') score++;
 
-// ---------- Quiz Submit ----------
-quizForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+    const percent = Math.round((score / TOTAL) * 100);
+    scoreText.innerHTML = `You scored <b>${score}/${TOTAL}</b> (${percent}%)`;
 
-  const q1 = quizForm.q1.value;
-  const q2 = quizForm.q2.value;
+    quizSection.classList.add('hidden');
+    resultSection.classList.remove('hidden');
 
-  let score = 0;
-  if (q1 === 'JavaScript') score++;
-  if (q2 === '<script>')   score++;
+    if (score === TOTAL) {
+      certDiv.classList.remove('hidden');
+    } else {
+      certDiv.classList.add('hidden');
+    }
+  });
 
-  scoreText.textContent = `You scored ${score}/2`;
-  quizSection.classList.add('hidden');
-  resultSection.classList.remove('hidden');
-
-  if (score === 2) {
-    certDiv.classList.remove('hidden');
-    // Update progress only when full score
-    progress.lessonsCompleted += 1;
-    progress.certsEarned += 1;
-    saveProgress(progress);
-    updateDashboard();
-  } else {
+  // Retry quiz
+  retryBtn.addEventListener('click', () => {
+    quizForm.reset();
     certDiv.classList.add('hidden');
-  }
-});
+    resultSection.classList.add('hidden');
+    quizSection.classList.remove('hidden');
+  });
 
-// ---------- Dashboard render ----------
-function updateDashboard() {
-  document.getElementById('lessonsCount').textContent = progress.lessonsCompleted;
-  document.getElementById('certCount').textContent = progress.certsEarned;
-                          }
+  // Back to lesson
+  backBtn.addEventListener('click', () => {
+    quizForm.reset();
+    certDiv.classList.add('hidden');
+    resultSection.classList.add('hidden');
+    lessonSection.classList.remove('hidden');
+  });
+}); 

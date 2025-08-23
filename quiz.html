@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz: HTML Basics</h1>
+    <form id="quizForm">
+      <div class="question">
+        <p>1. What does HTML stand for?</p>
+        <label><input type="radio" name="q1" value="a"> Hyper Text Markup Language</label><br>
+        <label><input type="radio" name="q1" value="b"> High Text Machine Learning</label><br>
+      </div>
+
+      <div class="question">
+        <p>2. Which tag is used for largest heading?</p>
+        <label><input type="radio" name="q2" value="a">&lt;h6&gt;</label><br>
+        <label><input type="radio" name="q2" value="b">&lt;h1&gt;</label><br>
+      </div>
+
+      <div class="question">
+        <p>3. Which tag is used to create a link?</p>
+        <label><input type="radio" name="q3" value="a">&lt;a&gt;</label><br>
+        <label><input type="radio" name="q3" value="b">&lt;link&gt;</label><br>
+      </div>
+
+      <div class="question">
+        <p>4. Which tag is used to insert an image?</p>
+        <label><input type="radio" name="q4" value="a">&lt;image&gt;</label><br>
+        <label><input type="radio" name="q4" value="b">&lt;img&gt;</label><br>
+      </div>
+
+      <div class="question">
+        <p>5. Which attribute specifies the link destination in &lt;a&gt; tag?</p>
+        <label><input type="radio" name="q5" value="a"> href</label><br>
+        <label><input type="radio" name="q5" value="b"> src</label><br>
+      </div>
+
+      <button type="button" class="btn" onclick="submitQuiz()">Submit Quiz</button>
+    </form>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

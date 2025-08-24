@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lesson 2 - CSS</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Lesson 2: CSS Basics</h2>
+
+    <!-- Video -->
+    <iframe width="400" height="250" src="https://www.youtube.com/embed/1PnVor36_40" frameborder="0" allowfullscreen></iframe>
+
+    <!-- Text Notes -->
+    <p>CSS (Cascading Style Sheets) is used to style HTML elements. It controls colors, fonts, spacing, borders, and layout of web pages.</p>
+    <p>CSS Syntax Example:</p>
+    <pre>
+selector {
+  property: value;
+}
+    </pre>
+    <p>Example: <code>p { color: blue; font-size: 16px; }</code> sets paragraph text to blue and font size 16px.</p>
+    <p>CSS can be applied via Inline, Internal, or External methods.</p>
+
+    <h3>Quiz</h3>
+    <form id="quiz2">
+      <p>1. CSS stands for?</p>
+      <input type="radio" name="q1" value="a"> Computer Style Sheets<br>
+      <input type="radio" name="q1" value="b"> Cascading Style Sheets<br>
+      <input type="radio" name="q1" value="c"> Creative Style System<br>
+
+      <p>2. Which symbol is used to select a class?</p>
+      <input type="radio" name="q2" value="a"> #<br>
+      <input type="radio" name="q2" value="b"> .<br>
+      <input type="radio" name="q2" value="c"> $<br>
+
+      <p>3. How to set text color to red in CSS?</p>
+      <input type="radio" name="q3" value="a"> color: red;<br>
+      <input type="radio" name="q3" value="b"> text-color: red;<br>
+      <input type="radio" name="q3" value="c"> font-color: red;<br>
+
+      <p>4. Which property changes font size?</p>
+      <input type="radio" name="q4" value="a"> font-size<br>
+      <input type="radio" name="q4" value="b"> text-size<br>
+      <input type="radio" name="q4" value="c"> size<br>
+
+      <p>5. CSS can be applied via?</p>
+      <input type="radio" name="q5" value="a"> Inline, Internal, External<br>
+      <input type="radio" name="q5" value="b"> Only External<br>
+      <input type="radio" name="q5" value="c"> Only Inline<br>
+
+      <button type="button" onclick="submitQuiz('quiz2','CSS Basics')">Submit Quiz</button>
+    </form>
+  </div>
+</body>
+</html>

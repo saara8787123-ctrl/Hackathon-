@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Certificate</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="certificate">
     <h1>Certificate of Completion</h1>
-    <p>This certificate is proudly presented to</p>
-    <h2 id="studentName">Student</h2>
-    <p>for successfully completing the lesson and scoring</p>
-    <h3 id="scoreText">0 / 5</h3>
-    <p>Date: <span id="date"></span></p>
+    <p>This is to certify that</p>
+    <h2 id="studentName"></h2>
+    <p>has successfully completed <span id="lessonName"></span> with a score of <span id="score"></span>%</p>
+    <button onclick="window.print()">Download Certificate</button>
+    <a href="index.html">Back to Dashboard</a>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    document.getElementById("studentName").textContent = localStorage.getItem("username") || "Student";
+    document.getElementById("lessonName").textContent = localStorage.getItem("lesson");
+    document.getElementById("score").textContent = localStorage.getItem("score");
+  </script>
 </body>
 </html>

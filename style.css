@@ -1,48 +1,37 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f3f6fa;
-  margin: 0;
-  padding: 0;
+  background: linear-gradient(135deg, #6dd5fa, #2980b9);
   text-align: center;
 }
+
 .container {
-  width: 80%;
-  margin: 20px auto;
-  background: #fff;
+  background: white;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-.card {
-  margin: 20px 0;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-.btn {
-  display: inline-block;
-  background: #007bff;
-  color: white;
-  padding: 10px 15px;
-  text-decoration: none;
-  border-radius: 6px;
-  margin-top: 15px;
-}
-.btn:hover {
-  background: #0056b3;
-}
-.question {
-  text-align: left;
-  margin: 15px 0;
-}
-.certificate {
-  border: 4px solid #333;
-  width: 70%;
-  margin: 40px auto;
-  padding: 30px;
+  margin: 30px auto;
+  width: 60%;
   border-radius: 10px;
-  background: #fff;
+  box-shadow: 0 0 10px gray;
 }
-.certificate h1 {
-  color: #007bff;
+
+button {
+  background: teal;
+  color: white;
+  padding: 8px 15px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.certificate {
+  margin-top: 50px;
+  background: #fffacd;
+  padding: 30px;
+  border: 2px solid #000;
+  border-radius: 15px;
+}
+
+iframe {
+  margin-bottom: 20px;
+  border-radius: 10px;
 }
